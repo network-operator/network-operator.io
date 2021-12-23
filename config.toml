@@ -1,0 +1,6 @@
+baseURL = "http://network-operator.io/"
+languageCode = "en-us"
+title = "Network Operators for Kubernetes"
+theme = "learn"
+[outputs]
+home = [ "HTML", "RSS", "JSON" ]
