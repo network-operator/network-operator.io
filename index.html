@@ -6,17 +6,17 @@
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
 <title> :: Network Operators for Kubernetes</title>
-<link href=/css/nucleus.css?1640228598 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1640228598 rel=stylesheet>
-<link href=/css/hybrid.css?1640228598 rel=stylesheet>
-<link href=/css/featherlight.min.css?1640228598 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1640228598 rel=stylesheet>
-<link href=/css/auto-complete.css?1640228598 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1640228598 rel=stylesheet>
-<link href=/css/theme.css?1640228598 rel=stylesheet>
-<link href=/css/tabs.css?1640228598 rel=stylesheet>
-<link href=/css/hugo-theme.css?1640228598 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1640228598></script>
+<link href=/css/nucleus.css?1640231170 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1640231170 rel=stylesheet>
+<link href=/css/hybrid.css?1640231170 rel=stylesheet>
+<link href=/css/featherlight.min.css?1640231170 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1640231170 rel=stylesheet>
+<link href=/css/auto-complete.css?1640231170 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1640231170 rel=stylesheet>
+<link href=/css/theme.css?1640231170 rel=stylesheet>
+<link href=/css/tabs.css?1640231170 rel=stylesheet>
+<link href=/css/hugo-theme.css?1640231170 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1640231170></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style>
 </head>
 <body data-url=/>
@@ -32,10 +32,10 @@ Network Operators
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
 </div>
-<script type=text/javascript src=/js/lunr.min.js?1640228598></script>
-<script type=text/javascript src=/js/auto-complete.js?1640228598></script>
+<script type=text/javascript src=/js/lunr.min.js?1640231170></script>
+<script type=text/javascript src=/js/auto-complete.js?1640231170></script>
 <script type=text/javascript>var baseurl="http://network-operator.io/"</script>
-<script type=text/javascript src=/js/search.js?1640228598></script>
+<script type=text/javascript src=/js/search.js?1640231170></script>
 </div>
 <section id=homelinks>
 <ul>
@@ -64,6 +64,214 @@ Network Operators
 <h1 id=network-operators-for-kubernetes>Network Operators for Kubernetes</h1>
 <p>This project will be the home for using the Kubernetes Operator pattern
 for managing network infrastructure.</p>
+<h2 id=what-is-it>What is it?</h2>
+<p><code>network-operators.io</code> is a domain registered for creating Kubernetes
+Operators with a valid, owned domain.</p>
+<p>The aim is to support multiple Operators for different things, such as:</p>
+<ul>
+<li>Meraki Deployments</li>
+<li>Streaming Telemetry Deployments</li>
+<li>Configuration of abstracted elements across multiple vendors, such as:
+<ul>
+<li>NTP</li>
+<li>Syslog</li>
+<li>ACLs</li>
+</ul>
+</li>
+</ul>
+<p>This operators would be generally opinionated while also allowing
+vendor-specific extensions/options.</p>
+<h3 id=proposed-operators-meraki>Proposed Operators: Meraki</h3>
+<p>An example of using a proposed Meraki Operator to define wireless
+networks might be the following:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#75715e># manifests/network.yaml</span>
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>meraki.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Network</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>network-sample</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>organization</span>: <span style=color:#ae81ff>example-org</span>
+  <span style=color:#f92672>statusPage</span>:
+    <span style=color:#f92672>local</span>: <span style=color:#ae81ff>enabled</span>
+    <span style=color:#f92672>remote</span>: <span style=color:#ae81ff>enabled</span>
+---
+<span style=color:#75715e># manifests/rfprofile.yaml</span>
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>meraki.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>RFProfile</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>rfprofile-sample</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>network</span>: <span style=color:#ae81ff>network-sample</span>
+  <span style=color:#f92672>band</span>:
+    <span style=color:#f92672>selectionType</span>: <span style=color:#ae81ff>ap</span>
+    <span style=color:#f92672>clientBalancing</span>: <span style=color:#66d9ef>yes</span>
+    <span style=color:#f92672>steering</span>: <span style=color:#66d9ef>yes</span>
+  <span style=color:#f92672>5ghz</span>:
+    <span style=color:#f92672>power</span>:
+      <span style=color:#f92672>minimum</span>: <span style=color:#ae81ff>8</span>
+      <span style=color:#f92672>maximum</span>: <span style=color:#ae81ff>10</span>
+    <span style=color:#f92672>channel</span>:
+      <span style=color:#f92672>width</span>: <span style=color:#ae81ff>20</span>
+      <span style=color:#f92672>autoChannels</span>:
+        - <span style=color:#ae81ff>56</span>
+        - <span style=color:#ae81ff>6</span>
+  <span style=color:#f92672>24ghz</span>:
+    <span style=color:#f92672>power</span>:
+      <span style=color:#f92672>minimum</span>: <span style=color:#ae81ff>8</span>
+      <span style=color:#f92672>maximum</span>: <span style=color:#ae81ff>10</span>
+    <span style=color:#f92672>channel</span>:
+      <span style=color:#f92672>width</span>: <span style=color:#ae81ff>20</span>
+      <span style=color:#f92672>autoChannels</span>:
+        - <span style=color:#ae81ff>1</span>
+        - <span style=color:#ae81ff>6</span>
+        - <span style=color:#ae81ff>11</span>
+---
+<span style=color:#75715e># manifests/ssid.yaml</span>
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>meraki.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>SSID</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>example-ssid</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>network</span>: <span style=color:#ae81ff>network-sample</span>
+  <span style=color:#f92672>ipAssignmentMode</span>: <span style=color:#ae81ff>nat</span>
+  <span style=color:#f92672>vlans</span>:
+    <span style=color:#f92672>tagging</span>: <span style=color:#66d9ef>yes</span>
+    <span style=color:#f92672>default</span>: <span style=color:#ae81ff>10</span>
+  <span style=color:#f92672>apAvailabilityTags</span>:
+    - <span style=color:#ae81ff>site1</span>
+    - <span style=color:#ae81ff>prod</span>
+  <span style=color:#f92672>bandSelection</span>: <span style=color:#ae81ff>steering</span>
+  <span style=color:#f92672>auth</span>:
+    <span style=color:#f92672>mode</span>: <span style=color:#ae81ff>psk</span>
+    <span style=color:#f92672>psk</span>: <span style=color:#ae81ff>examplepsk123</span>
+  <span style=color:#f92672>encryption</span>: <span style=color:#ae81ff>wpa</span>
+  <span style=color:#f92672>broadcast</span>: <span style=color:#66d9ef>yes</span>
+  <span style=color:#f92672>lanIsolation</span>: <span style=color:#66d9ef>no</span>
+---
+<span style=color:#75715e># manifests/globalwirelesssettings.yaml</span>
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>meraki.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>GlobalWirelessSettings</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>globalwirelesssettings-sample</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>network</span>: <span style=color:#ae81ff>network-sample</span>
+  <span style=color:#f92672>upgradeSetting</span>: <span style=color:#ae81ff>minimizeClientDowntime</span>
+  <span style=color:#f92672>ledLights</span>: <span style=color:#66d9ef>on</span>
+  <span style=color:#f92672>locationAnalytics</span>: <span style=color:#66d9ef>no</span>
+  <span style=color:#f92672>mesh</span>: <span style=color:#66d9ef>no</span>
+---
+<span style=color:#75715e># manifests/ap1.yaml</span>
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>meraki.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>AccessPoint</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>accesspoint1-sample</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>network</span>: <span style=color:#ae81ff>network-sample</span>
+  <span style=color:#f92672>serialNumber</span>: <span style=color:#ae81ff>abc123</span>
+  <span style=color:#f92672>physicalAddress</span>: |<span style=color:#e6db74>
+</span><span style=color:#e6db74>    123 Example St
+</span><span style=color:#e6db74>    Somewhere, USA</span>    
+  <span style=color:#f92672>tags</span>:
+    - <span style=color:#ae81ff>prod</span>
+    - <span style=color:#ae81ff>site1</span>
+  <span style=color:#f92672>rfProfile</span>: <span style=color:#ae81ff>rfprofile-sample</span>
+  <span style=color:#f92672>radios</span>:
+    <span style=color:#f92672>5ghz</span>:
+      <span style=color:#f92672>channel</span>: <span style=color:#ae81ff>60</span>
+      <span style=color:#f92672>power</span>: <span style=color:#ae81ff>12</span>
+    <span style=color:#f92672>24ghz</span>:
+      <span style=color:#f92672>channel</span>: <span style=color:#ae81ff>6</span>
+      <span style=color:#f92672>power</span>: <span style=color:#ae81ff>11</span>
+---
+<span style=color:#75715e># manifests/ap2.yaml</span>
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>meraki.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>AccessPoint</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>accesspoint2-sample</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>network</span>: <span style=color:#ae81ff>network-sample</span>
+  <span style=color:#f92672>serialNumber</span>: <span style=color:#ae81ff>123abc</span>
+  <span style=color:#f92672>physicalAddress</span>: |<span style=color:#e6db74>
+</span><span style=color:#e6db74>    123 Example St
+</span><span style=color:#e6db74>    Somewhere, Canada</span>    
+  <span style=color:#f92672>tags</span>:
+    - <span style=color:#ae81ff>prod</span>
+    - <span style=color:#ae81ff>site1</span>
+  <span style=color:#f92672>rfProfile</span>: <span style=color:#ae81ff>rfprofile-sample</span>
+</code></pre></div><p>The above could be easily templated with Helm and/or customized with Kustomize.</p>
+<h3 id=proposed-operators-abstracted>Proposed Operators: Abstracted</h3>
+<p>The Abstracted Network Operator would allow you to define generic configurations that apply to all (or most) devices, such as NTP or Syslog. An example might be the following for configuring NTP on all devices:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>---
+<span style=color:#75715e># manifests/device-a.yaml</span>
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>abstracted.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Device</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>RouterA</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>serialNumber</span>: <span style=color:#ae81ff>xyz123</span>
+  <span style=color:#f92672>physicalAddress</span>: |<span style=color:#e6db74>
+</span><span style=color:#e6db74>    123 Example St
+</span><span style=color:#e6db74>    Somerewhere, Canada</span>    
+  <span style=color:#f92672>os</span>:
+    <span style=color:#f92672>name</span>: <span style=color:#ae81ff>nxos</span>
+    <span style=color:#f92672>version</span>: <span style=color:#ae81ff>7.0.3</span>
+  <span style=color:#f92672>tags</span>:
+    - <span style=color:#ae81ff>prod</span>
+    - <span style=color:#ae81ff>site3</span>
+---
+<span style=color:#75715e># manifests/device-b.yaml</span>
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>abstracted.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Device</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>RouterB</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>serialNumber</span>: <span style=color:#ae81ff>123xyz</span>
+  <span style=color:#f92672>physicalAddress</span>: |<span style=color:#e6db74>
+</span><span style=color:#e6db74>    123 Example St
+</span><span style=color:#e6db74>    Somerewhere, UK</span>    
+  <span style=color:#f92672>os</span>:
+    <span style=color:#f92672>name</span>: <span style=color:#ae81ff>eos</span>
+  <span style=color:#f92672>tags</span>:
+    - <span style=color:#ae81ff>prod</span>
+    - <span style=color:#ae81ff>site2</span>
+---
+<span style=color:#75715e># manifests/ntp.yaml</span>
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>abstracted.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>NTP</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>site-a</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>servers</span>:
+    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>0.</span><span style=color:#ae81ff>pool.ntp.org</span>
+      <span style=color:#f92672>preferred</span>: <span style=color:#66d9ef>yes</span>
+    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>1.</span><span style=color:#ae81ff>pool.ntp.org</span>
+  <span style=color:#f92672>vrf</span>: <span style=color:#ae81ff>management</span>
+  <span style=color:#f92672>tags</span>:
+    - <span style=color:#ae81ff>site3</span>
+</code></pre></div><p>The above Custom Resources would add two routers to device inventory, each with different tags. Then, it would create an NTP configuration, but only for devices in the inventory with the <code>site3</code> tag (so, only <code>RouterA</code> in this example). Possibly extensions to his Custom Resource Definition might including being able to use external inventory sources, such as NetBox, with an additional parameter. An example of that might be:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>---
+<span style=color:#75715e># manifests/netbox-inventory.yaml</span>
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>abstracted.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>InventorySource</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>netbox</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>server</span>: <span style=color:#ae81ff>netbox.example.com</span>
+---
+<span style=color:#75715e># manifests/ntp.yaml</span>
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>abstracted.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>NTP</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>site-a</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>inventory</span>: <span style=color:#ae81ff>netbox</span>
+  <span style=color:#f92672>servers</span>:
+    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>0.</span><span style=color:#ae81ff>pool.ntp.org</span>
+      <span style=color:#f92672>preferred</span>: <span style=color:#66d9ef>yes</span>
+    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>1.</span><span style=color:#ae81ff>pool.ntp.org</span>
+  <span style=color:#f92672>tags</span>:
+    - <span style=color:#ae81ff>site4</span>
+</code></pre></div>
 </div>
 </div>
 <div id=navigation>
@@ -72,17 +280,17 @@ for managing network infrastructure.</p>
 <div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
 <div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div>
 </div>
-<script src=/js/clipboard.min.js?1640228598></script>
-<script src=/js/perfect-scrollbar.min.js?1640228598></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1640228598></script>
-<script src=/js/jquery.sticky.js?1640228598></script>
-<script src=/js/featherlight.min.js?1640228598></script>
-<script src=/js/highlight.pack.js?1640228598></script>
+<script src=/js/clipboard.min.js?1640231170></script>
+<script src=/js/perfect-scrollbar.min.js?1640231170></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1640231170></script>
+<script src=/js/jquery.sticky.js?1640231170></script>
+<script src=/js/featherlight.min.js?1640231170></script>
+<script src=/js/highlight.pack.js?1640231170></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1640228598></script>
-<script src=/js/learn.js?1640228598></script>
-<script src=/js/hugo-learn.js?1640228598></script>
-<script src=/mermaid/mermaid.js?1640228598></script>
+<script src=/js/modernizr.custom-3.6.0.js?1640231170></script>
+<script src=/js/learn.js?1640231170></script>
+<script src=/js/hugo-learn.js?1640231170></script>
+<script src=/mermaid/mermaid.js?1640231170></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body>
 </html>
