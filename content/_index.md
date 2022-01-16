@@ -1,11 +1,11 @@
 # Network Operators for Kubernetes
 
 This project will be the home for using the Kubernetes Operator pattern
-for managing network infrastructure.
+for managing (primarily) on-premises network infrastructure and/or VMs.
 
 ## What is it?
 
-`network-operators.io` is a domain registered for creating Kubernetes
+`network-operator.io` is a domain registered for creating Kubernetes
 Operators with a valid, owned domain.
 
 The aim is to support multiple Operators for different things, such as:
