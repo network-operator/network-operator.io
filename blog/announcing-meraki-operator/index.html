@@ -6,17 +6,17 @@
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
 <title>Announcing the Meraki Operator :: Network Operators for Kubernetes</title>
-<link href=/css/nucleus.css?1642368756 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1642368756 rel=stylesheet>
-<link href=/css/hybrid.css?1642368756 rel=stylesheet>
-<link href=/css/featherlight.min.css?1642368756 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1642368756 rel=stylesheet>
-<link href=/css/auto-complete.css?1642368756 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1642368756 rel=stylesheet>
-<link href=/css/theme.css?1642368756 rel=stylesheet>
-<link href=/css/tabs.css?1642368756 rel=stylesheet>
-<link href=/css/hugo-theme.css?1642368756 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1642368756></script>
+<link href=/css/nucleus.css?1642368891 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1642368891 rel=stylesheet>
+<link href=/css/hybrid.css?1642368891 rel=stylesheet>
+<link href=/css/featherlight.min.css?1642368891 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1642368891 rel=stylesheet>
+<link href=/css/auto-complete.css?1642368891 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1642368891 rel=stylesheet>
+<link href=/css/theme.css?1642368891 rel=stylesheet>
+<link href=/css/tabs.css?1642368891 rel=stylesheet>
+<link href=/css/hugo-theme.css?1642368891 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1642368891></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style>
 </head>
 <body data-url=/blog/announcing-meraki-operator/>
@@ -32,10 +32,10 @@ Network Operators
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
 </div>
-<script type=text/javascript src=/js/lunr.min.js?1642368756></script>
-<script type=text/javascript src=/js/auto-complete.js?1642368756></script>
+<script type=text/javascript src=/js/lunr.min.js?1642368891></script>
+<script type=text/javascript src=/js/auto-complete.js?1642368891></script>
 <script type=text/javascript>var baseurl="http://network-operator.io/"</script>
-<script type=text/javascript src=/js/search.js?1642368756></script>
+<script type=text/javascript src=/js/search.js?1642368891></script>
 </div>
 <section id=homelinks>
 <ul>
@@ -315,7 +315,16 @@ we need to create the <code>Constraint</code> itself:</p>
         <span style=color:#f92672>kinds</span>: [<span style=color:#e6db74>&#34;SSIDs&#34;</span>, <span style=color:#e6db74>&#34;SSID&#34;</span>]
   <span style=color:#f92672>parameters</span>:
     <span style=color:#f92672>ssid_name</span>: <span style=color:#e6db74>&#34;Guest WiFi&#34;</span>
-</code></pre></div><p>The above <code>Constraint</code> is of a type <code>OpenSSIDRequirements, which matches the </code>.spec.crd.spec.names.kind<code>value from our</code>ConstraintTemplate<code>above. It operates only on the</code>SSIDs<code>and</code>SSID<code>objects from the</code>meraki.network-operator.io<code>API. Since these objects are where we create SSIDs and define authentication modes, these are the only objects we need to worry about. The</code>.spec.parameters<code>are passed to the associated</code>ConstraintTemplate<code>, so in this case, our </code>Constraint<code>says that the SSID name must be</code>Guest WiFi<code>if the authentication mode is</code>open`. To simplify the steps above, our logic is now:</p>
+</code></pre></div><p>The above <code>Constraint</code> is of a type <code>OpenSSIDRequirements</code>, which
+matches the <code>.spec.crd.spec.names.kind</code> value from our
+<code>ConstraintTemplate</code> above. It operates only on the <code>SSIDs</code> and <code>SSID</code>
+objects from the <code>meraki.network-operator.io</code> API. Since these objects
+are where we create SSIDs and define authentication modes, these are the
+only objects we need to worry about. The <code>.spec.parameters</code> are passed
+to the associated <code>ConstraintTemplate</code>, so in this case, our
+<code>Constraint</code> says that the SSID name must be <code>Guest WiFi</code> if the
+authentication mode is <code>open</code>. To simplify the steps above, our logic
+is now:</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#66d9ef>if</span> apiGroup <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;meraki.network-operator.io&#34;</span> <span style=color:#f92672>and</span> kind <span style=color:#f92672>in</span> [<span style=color:#e6db74>&#34;SSIDs&#34;</span>, <span style=color:#e6db74>&#34;SSID&#34;</span>]:
     <span style=color:#66d9ef>if</span> object[<span style=color:#e6db74>&#34;spec&#34;</span>][<span style=color:#e6db74>&#34;authentication&#34;</span>][<span style=color:#e6db74>&#34;mode&#34;</span>] <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;open&#34;</span>:
         <span style=color:#66d9ef>if</span> object[<span style=color:#e6db74>&#34;spec&#34;</span>][<span style=color:#e6db74>&#34;name&#34;</span>] <span style=color:#f92672>!=</span> <span style=color:#e6db74>&#34;Guest WiFi&#34;</span>:
@@ -404,17 +413,17 @@ Operator pattern.</p>
 <div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
 <div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div>
 </div>
-<script src=/js/clipboard.min.js?1642368756></script>
-<script src=/js/perfect-scrollbar.min.js?1642368756></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1642368756></script>
-<script src=/js/jquery.sticky.js?1642368756></script>
-<script src=/js/featherlight.min.js?1642368756></script>
-<script src=/js/highlight.pack.js?1642368756></script>
+<script src=/js/clipboard.min.js?1642368891></script>
+<script src=/js/perfect-scrollbar.min.js?1642368891></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1642368891></script>
+<script src=/js/jquery.sticky.js?1642368891></script>
+<script src=/js/featherlight.min.js?1642368891></script>
+<script src=/js/highlight.pack.js?1642368891></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1642368756></script>
-<script src=/js/learn.js?1642368756></script>
-<script src=/js/hugo-learn.js?1642368756></script>
-<script src=/mermaid/mermaid.js?1642368756></script>
+<script src=/js/modernizr.custom-3.6.0.js?1642368891></script>
+<script src=/js/learn.js?1642368891></script>
+<script src=/js/hugo-learn.js?1642368891></script>
+<script src=/mermaid/mermaid.js?1642368891></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body>
 </html>
