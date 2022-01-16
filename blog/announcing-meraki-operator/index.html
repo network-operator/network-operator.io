@@ -1,0 +1,460 @@
+<!doctype html><html lang=en class="js csstransforms3d">
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=generator content="Hugo 0.92.0">
+<meta name=description content>
+<link rel=icon href=/images/favicon.png type=image/png>
+<title>Announcing the Meraki Operator :: Network Operators for Kubernetes</title>
+<link href=/css/nucleus.css?1642368651 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1642368651 rel=stylesheet>
+<link href=/css/hybrid.css?1642368651 rel=stylesheet>
+<link href=/css/featherlight.min.css?1642368651 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1642368651 rel=stylesheet>
+<link href=/css/auto-complete.css?1642368651 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1642368651 rel=stylesheet>
+<link href=/css/theme.css?1642368651 rel=stylesheet>
+<link href=/css/tabs.css?1642368651 rel=stylesheet>
+<link href=/css/hugo-theme.css?1642368651 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1642368651></script>
+<style>:root #header+#content>#left>#rlblock_left{display:none!important}</style>
+</head>
+<body data-url=/blog/announcing-meraki-operator/>
+<nav id=sidebar>
+<div id=header-wrapper>
+<div id=header>
+<a id=logo href=/>
+Network Operators
+</a>
+</div>
+<div class=searchbox>
+<label for=search-by><i class="fas fa-search"></i></label>
+<input data-search-input id=search-by type=search placeholder=Search...>
+<span data-search-clear><i class="fas fa-times"></i></span>
+</div>
+<script type=text/javascript src=/js/lunr.min.js?1642368651></script>
+<script type=text/javascript src=/js/auto-complete.js?1642368651></script>
+<script type=text/javascript>var baseurl="http://network-operator.io/"</script>
+<script type=text/javascript src=/js/search.js?1642368651></script>
+</div>
+<section id=homelinks>
+<ul>
+<li>
+<a class=padding href=/><i class="fas fa-home"></i> Home</a>
+</li>
+</ul>
+</section>
+<div class=highlightable>
+<ul class=topics>
+<li data-nav-id=/blog/ title=Blogs class="dd-item
+parent">
+<a href=/blog/>
+Blogs
+</a>
+<ul>
+<li data-nav-id=/blog/announcing-meraki-operator/ title="Announcing the Meraki Operator" class="dd-item active">
+<a href=/blog/announcing-meraki-operator/>
+Announcing the Meraki Operator
+</a>
+</li>
+</ul>
+</li>
+</ul>
+<section id=footer>
+<p>Built with <a href=https://github.com/matcornic/hugo-theme-learn><i class="fas fa-heart"></i></a> from <a href=https://getgrav.org>Grav</a> and <a href=https://gohugo.io/>Hugo</a></p>
+</section>
+</div>
+</nav>
+<section id=body>
+<div id=overlay></div>
+<div class="padding highlightable">
+<div>
+<div id=top-bar>
+<div id=breadcrumbs itemscope itemtype=http://data-vocabulary.org/Breadcrumb>
+<span id=sidebar-toggle-span>
+<a href=# id=sidebar-toggle data-sidebar-toggle>
+<i class="fas fa-bars"></i>
+</a>
+</span>
+<span id=toc-menu><i class="fas fa-list-alt"></i></span>
+<span class=links>
+<a href=/></a> > <a href=/blog/>Blogs</a> > Announcing the Meraki Operator
+</span>
+</div>
+<div class=progress>
+<div class=wrapper>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#remote-disabled>apiVersion: meraki.network-operator.io/v1alpha1
+kind: Network
+metadata:
+name: yyz-corporate
+spec:
+organization: Example Organization
+name: YYZ Corporate
+statusPage:
+local: enabled
+remote: disabled</a></li>
+<li><a href=#width-20>apiVersion: meraki.network-operator.io/v1alpha1
+kind: RFProfile
+metadata:
+name: YYZ Default RF Profile
+spec:
+organization: Example Organization
+network: YYZ Corporate
+band:
+selectionType: ap
+steering: true
+clientBalancing: true
+fiveGhz:
+channel:
+width: 20</a></li>
+<li><a href=#psk-examplepsk123>apiVersion: meraki.network-operator.io/v1alpha1
+kind: SSID
+metadata:
+name: YYZ Corporate Employee SSID
+spec:
+organization: Example Organization
+network: YYZ Corporate
+authentication:
+mode: psk
+psk: ExamplePSK123</a></li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+</div>
+<div id=head-tags>
+</div>
+<div id=body-inner>
+<h1>
+Announcing the Meraki Operator
+</h1>
+<h1 id=meraki-operator>Meraki Operator</h1>
+<p>The Proof of Viability (PoV) for the Meraki Operator is nearly finished.
+The final step is to build and publish the image so that it can run
+within the cluster itself as it is currently only tested running
+external to the cluster. It has a limited feature set, but includes
+the following:</p>
+<ul>
+<li>Create a Meraki Network</li>
+<li>Create an RF Profile
+<ul>
+<li>Set valid channels for dynamic channel adjustments</li>
+<li>Set channel width for 5Ghz</li>
+<li>Set minimum and maximum transmit power for transmit power modifications</li>
+<li>Enable/disable client balancing</li>
+</ul>
+</li>
+<li>Create an SSID
+<ul>
+<li>Configure as Open or PSK authentication</li>
+<li>Set a PSK</li>
+<li>Set a networking mode
+<ul>
+<li>NAT</li>
+<li>Bridge</li>
+<li>Layer 3 Roaming</li>
+</ul>
+</li>
+<li>Set default VLAN ID</li>
+</ul>
+</li>
+<li>Adopt an MR Access Point
+<ul>
+<li>Set static 2.4Ghz and/or 5Ghz channels</li>
+<li>Set a static power target</li>
+<li>Set device tags</li>
+</ul>
+</li>
+<li>Configure global settings
+<ul>
+<li>Upgrade policy
+<ul>
+<li>Minimize client downtime</li>
+<li>Minimize upgrade time</li>
+</ul>
+</li>
+<li>Mesh networking</li>
+<li>Analytics collection</li>
+</ul>
+</li>
+<li>Support for multiple organizations and networks</li>
+</ul>
+<p>As an example, the following manifests will:</p>
+<ul>
+<li>Create a network, RF Profile, and SSID</li>
+<li>Adopt an Access Point and select an RF Profile</li>
+<li>Define the upgrade strategy for APs to minimize client impact</li>
+</ul>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>
+</code></pre></div><hr>
+<h2 id=remote-disabled>apiVersion: meraki.network-operator.io/v1alpha1
+kind: Network
+metadata:
+name: yyz-corporate
+spec:
+organization: Example Organization
+name: YYZ Corporate
+statusPage:
+local: enabled
+remote: disabled</h2>
+<h2 id=width-20>apiVersion: meraki.network-operator.io/v1alpha1
+kind: RFProfile
+metadata:
+name: YYZ Default RF Profile
+spec:
+organization: Example Organization
+network: YYZ Corporate
+band:
+selectionType: ap
+steering: true
+clientBalancing: true
+fiveGhz:
+channel:
+width: 20</h2>
+<h2 id=psk-examplepsk123>apiVersion: meraki.network-operator.io/v1alpha1
+kind: SSID
+metadata:
+name: YYZ Corporate Employee SSID
+spec:
+organization: Example Organization
+network: YYZ Corporate
+authentication:
+mode: psk
+psk: ExamplePSK123</h2>
+<p>apiVersion: meraki.network-operator.io/v1alpha1
+kind: AccessPoint
+metadata:
+name: ap1-yyz
+spec:
+organization: Example Organization
+network: YYZ Corporate
+physicalAddress: |
+123 Example St
+Columbia, SC
+USA
+radios:
+24ghz:
+channel: 6
+rfProfile: YYZ Default RF Profile
+serialNumber: ABCD-1234-WXYZ
+tags:</p>
+<ul>
+<li>yyz</li>
+<li>corp</li>
+</ul>
+<hr>
+<p>apiVersion: meraki.network-operator.io/v1alpha1
+kind: GlobalWirelessSettings
+metadata:
+name: yyz-corporate-wifi-settings
+spec:
+upgradeSetting: minimizeClientDowntime</p>
+<pre tabindex=0><code>
+On its own, this can be accomplished with Ansible (and, in fact, the
+PoV uses Ansible to do all of this!) or with a custom Python or Go
+project -- really, anything that leverages the Meraki API could do
+everything that the Meraki Operator does.  However, the value comes
+from leveraging the Kubernetes ecosystem.  The primary driver for
+this project was to:
+
+* Provide an API frontend on which a company may already be standardized
+* Provide an API frontent on which traditional developers could manage their networks
+* Reduce the need to create custom frameworks, libraries, codebases, Ansible roles/playbooks, etc.
+* Remove the need for managing authentication, authorization, auditing/logging, role-based access control, etc.
+
+The above items are handled by leveraging native Kubernetes features
+and the Operator pattern.  However, being able to leverage the wider
+Kubernetes ecosystem is another massive advantage.
+
+## Integrating OPA Gatekeeper
+
+Compliance is a huge advantage of the Kubernetes ecosystem.  While some
+things are provided by Kubernetes itself (as mentioned above), some more
+complex requirements are not.  For example, consider the following
+requirements for your wireless network:
+
+* You must not use DFS channels
+* The only SSID that can use &quot;Open&quot; authentication must be named `Guest WiFi`
+* Your RADIUS servers must be from a list of servers
+
+The first is an example of a local regulatory requirement; the second is
+an example of a mandate from your Security team; the third is an
+internal engineering standards requirement.  All of these can be
+enforced via manual efforts and audits, peer review, etc.  However, when
+leveraging the Meraki Operator with OPA Gatekeeper, these sorts of
+requirements can be enforced separate from your codebase, without
+requiring peer review, and with confidence that the state of your WiFi
+network is complying with regulatory, security, and architectural
+requirements!  Additionally, areas where peer review might miss a
+violation (such as a typo in an IP address for a RADIUS server, such as
+writing `192.168.31.150` instead of `192.168.13.150`) are now enforced
+by code for free!  This provides benefits to the persona writing the
+change, the persona reviewing the change, and the person who initially
+defined the standard!
+
+To show an example of this, we'll examine the most simple of the above
+three examples: `The only SSID that can use &quot;Open&quot; authentication must be named &quot;Guest WiFi&quot;`.
+Normally, we would need peer review and audits to validate this.
+However, if we leverage OPA Gatekeeper to enforce this, we can be
+confident that our standards are enforced without requiring additional
+cognitive workload.
+
+First, install OPA Gatekeeper:
+
+```bash
+$ kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/release-3.7/deploy/gatekeeper.yaml
+</code></pre><p>Once this is done, wait a few minutes for images to pull and pods to
+start. Next, create the <code>ConstraintTemplate</code>. This will create a
+parameterized <code>Constraint</code> Custom Resource Definition that we&rsquo;ll use to
+define the name of the SSID that is valid.</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>templates.gatekeeper.sh/v1beta1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ConstraintTemplate</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>openssidrequirements</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>crd</span>:
+    <span style=color:#f92672>spec</span>:
+      <span style=color:#f92672>names</span>:
+        <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>OpenSSIDRequirements</span>
+      <span style=color:#f92672>validation</span>:
+        <span style=color:#75715e># Schema for the `parameters` field</span>
+        <span style=color:#f92672>openAPIV3Schema</span>:
+          <span style=color:#f92672>properties</span>:
+            <span style=color:#f92672>ssid_name</span>:
+              <span style=color:#f92672>type</span>: <span style=color:#ae81ff>string</span>
+  <span style=color:#f92672>targets</span>:
+    - <span style=color:#f92672>target</span>: <span style=color:#ae81ff>admission.k8s.gatekeeper.sh</span>
+      <span style=color:#f92672>rego</span>: |<span style=color:#e6db74>
+</span><span style=color:#e6db74>        package openssidrequirements
+</span><span style=color:#e6db74>
+</span><span style=color:#e6db74>        violation[{&#34;msg&#34;: msg}] {
+</span><span style=color:#e6db74>          provided := input.review.object.metadata.name
+</span><span style=color:#e6db74>          required := input.parameters.ssid_name
+</span><span style=color:#e6db74>          auth_mode := input.review.object.spec.authentication.mode
+</span><span style=color:#e6db74>          auth_mode == &#34;open&#34;
+</span><span style=color:#e6db74>          provided != required
+</span><span style=color:#e6db74>          msg := sprintf(&#34;the ssid name must be: %v&#34;, [required])
+</span><span style=color:#e6db74>        }</span>        
+</code></pre></div><p>The above template checks to see if we&rsquo;ve defined an SSID with an
+authentication mode of <code>open</code>. If it is, then it checks to see if the
+SSID name that was provided by the object matches the one defined by the
+<code>Constraint</code>. It&rsquo;s important to note that a <code>ConstraintTemplate</code>
+doesn&rsquo;t do anything on its own. To actually enforce our desired policy,
+we need to create the <code>Constraint</code> itself:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>constraints.gatekeeper.sh/v1beta1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>OpenSSIDRequirements</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>open-ssid-name-must-be-guest</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>match</span>:
+    <span style=color:#f92672>kinds</span>:
+      - <span style=color:#f92672>apiGroups</span>: [<span style=color:#e6db74>&#34;meraki.network-operator.io&#34;</span>]
+        <span style=color:#f92672>kinds</span>: [<span style=color:#e6db74>&#34;SSIDs&#34;</span>, <span style=color:#e6db74>&#34;SSID&#34;</span>]
+  <span style=color:#f92672>parameters</span>:
+    <span style=color:#f92672>ssid_name</span>: <span style=color:#e6db74>&#34;Guest WiFi&#34;</span>
+</code></pre></div><p>The above <code>Constraint</code> is of a type <code>OpenSSIDRequirements, which matches the </code>.spec.crd.spec.names.kind<code>value from our</code>ConstraintTemplate<code>above. It operates only on the</code>SSIDs<code>and</code>SSID<code>objects from the</code>meraki.network-operator.io<code>API. Since these objects are where we create SSIDs and define authentication modes, these are the only objects we need to worry about. The</code>.spec.parameters<code>are passed to the associated</code>ConstraintTemplate<code>, so in this case, our </code>Constraint<code>says that the SSID name must be</code>Guest WiFi<code>if the authentication mode is</code>open`. To simplify the steps above, our logic is now:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#66d9ef>if</span> apiGroup <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;meraki.network-operator.io&#34;</span> <span style=color:#f92672>and</span> kind <span style=color:#f92672>in</span> [<span style=color:#e6db74>&#34;SSIDs&#34;</span>, <span style=color:#e6db74>&#34;SSID&#34;</span>]:
+    <span style=color:#66d9ef>if</span> object[<span style=color:#e6db74>&#34;spec&#34;</span>][<span style=color:#e6db74>&#34;authentication&#34;</span>][<span style=color:#e6db74>&#34;mode&#34;</span>] <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;open&#34;</span>:
+        <span style=color:#66d9ef>if</span> object[<span style=color:#e6db74>&#34;spec&#34;</span>][<span style=color:#e6db74>&#34;name&#34;</span>] <span style=color:#f92672>!=</span> <span style=color:#e6db74>&#34;Guest WiFi&#34;</span>:
+            <span style=color:#66d9ef>raise</span> <span style=color:#a6e22e>ValueError</span>(<span style=color:#e6db74>&#34;When using Open authentication, the SSID name must be &#39;Guest WiFi&#39;&#34;</span>)
+</code></pre></div><blockquote>
+<p>The above is written in Python, but is for illustrative purposes only.
+The code above does not exist anywhere.</p>
+</blockquote>
+<p>Now, if we try to create a new SSID, we&rsquo;ll get an error. Given the
+following manifest:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>meraki.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>SSID</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>invalid-wifi-name-open</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>organization</span>: <span style=color:#ae81ff>Example Organization</span>
+  <span style=color:#f92672>network</span>: <span style=color:#ae81ff>YYZ Corporate</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Corporate WiFi</span>
+  <span style=color:#f92672>authentication</span>:
+    <span style=color:#f92672>mode</span>: <span style=color:#ae81ff>open</span>
+</code></pre></div><p>When we try to apply it, we get an error with an appropriate message:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ kubectl apply -f invalid-wifi-name-open.yml
+Error from server <span style=color:#f92672>([</span>open-ssid-name-must-be-guest<span style=color:#f92672>]</span> the ssid name must be: Guest WiFi<span style=color:#f92672>)</span>: error when creating <span style=color:#e6db74>&#34;fail.yaml&#34;</span>: admission webhook <span style=color:#e6db74>&#34;validation.gatekeeper.sh&#34;</span> denied the request: <span style=color:#f92672>[</span>open-ssid-name-must-be-guest<span style=color:#f92672>]</span> the ssid name must be: Guest WiFi
+</code></pre></div><p>We can verify that the <code>Constraint</code> picked this up:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ kubectl describe openssidrequirements | sed -n <span style=color:#e6db74>&#39;/Status/,$p&#39;</span> 
+Status:
+  Audit Timestamp:  2022-01-16T21:27:33Z
+  By Pod:
+    Constraint UID:       1746ddbe-7715-425c-8924-825c1607af2d
+    Enforced:             true
+    Id:                   gatekeeper-audit-59d4b6fd4c-tw6sk
+    Observed Generation:  <span style=color:#ae81ff>3</span>
+    Operations:
+      audit
+      status
+    Constraint UID:       1746ddbe-7715-425c-8924-825c1607af2d
+    Enforced:             true
+    Id:                   gatekeeper-controller-manager-66f474f785-g9r66
+    Observed Generation:  <span style=color:#ae81ff>3</span>
+    Operations:
+      mutation-webhook
+      webhook
+    Constraint UID:       1746ddbe-7715-425c-8924-825c1607af2d
+    Enforced:             true
+    Id:                   gatekeeper-controller-manager-66f474f785-ntkkh
+    Observed Generation:  <span style=color:#ae81ff>3</span>
+    Operations:
+      mutation-webhook
+      webhook
+    Constraint UID:       1746ddbe-7715-425c-8924-825c1607af2d
+    Enforced:             true
+    Id:                   gatekeeper-controller-manager-66f474f785-qkxsv
+    Observed Generation:  <span style=color:#ae81ff>3</span>
+    Operations:
+      mutation-webhook
+      webhook
+  Total Violations:  <span style=color:#ae81ff>1</span>
+  Violations:
+    Enforcement Action:  deny
+    Kind:                SSID
+    Message:             the ssid name must be: Guest WiFi
+    Name:                invalid-wifi-name-open
+    Namespace:           default
+Events:                  &lt;none&gt;<span style=color:#e6db74>```</span>
+</code></pre></div><p>This enforces our standards using a decoupled approach. Different teams
+can own the policies, implementations, etc. We leverage technologies
+that are common to multiple teams, so our Security team can write a
+policy leveraging exactly the same toolset as they do for enforcing
+policies with developers deploying to Kubernetes, such as enforcing
+Read-Only Filesystems. This provides collaboration and low-friction
+cross-team interactions. It removes requirements to remember every
+tiny detail when implementing and reviewing: if something doesn&rsquo;t
+conform to a standard, it will be rejected with a meaningful message,
+so you can simply write a change and adjust as necessary.</p>
+<p>Hopefully this helps to show the advantage of managing a Meraki
+infrastructure (or any network configuration!) via the Kubernetes
+Operator pattern.</p>
+<footer class=footline>
+</footer>
+</div>
+</div>
+<div id=navigation>
+<a class="nav nav-prev" href=/blog/ title=Blogs> <i class="fa fa-chevron-left"></i></a>
+</div>
+</section>
+<div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
+<div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div>
+</div>
+<script src=/js/clipboard.min.js?1642368651></script>
+<script src=/js/perfect-scrollbar.min.js?1642368651></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1642368651></script>
+<script src=/js/jquery.sticky.js?1642368651></script>
+<script src=/js/featherlight.min.js?1642368651></script>
+<script src=/js/highlight.pack.js?1642368651></script>
+<script>hljs.initHighlightingOnLoad()</script>
+<script src=/js/modernizr.custom-3.6.0.js?1642368651></script>
+<script src=/js/learn.js?1642368651></script>
+<script src=/js/hugo-learn.js?1642368651></script>
+<script src=/mermaid/mermaid.js?1642368651></script>
+<script>mermaid.initialize({startOnLoad:!0})</script>
+</body>
+</html>
