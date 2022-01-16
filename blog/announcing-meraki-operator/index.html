@@ -6,17 +6,17 @@
 <meta name=description content>
 <link rel=icon href=/images/favicon.png type=image/png>
 <title>Announcing the Meraki Operator :: Network Operators for Kubernetes</title>
-<link href=/css/nucleus.css?1642368651 rel=stylesheet>
-<link href=/css/fontawesome-all.min.css?1642368651 rel=stylesheet>
-<link href=/css/hybrid.css?1642368651 rel=stylesheet>
-<link href=/css/featherlight.min.css?1642368651 rel=stylesheet>
-<link href=/css/perfect-scrollbar.min.css?1642368651 rel=stylesheet>
-<link href=/css/auto-complete.css?1642368651 rel=stylesheet>
-<link href=/css/atom-one-dark-reasonable.css?1642368651 rel=stylesheet>
-<link href=/css/theme.css?1642368651 rel=stylesheet>
-<link href=/css/tabs.css?1642368651 rel=stylesheet>
-<link href=/css/hugo-theme.css?1642368651 rel=stylesheet>
-<script src=/js/jquery-3.3.1.min.js?1642368651></script>
+<link href=/css/nucleus.css?1642368756 rel=stylesheet>
+<link href=/css/fontawesome-all.min.css?1642368756 rel=stylesheet>
+<link href=/css/hybrid.css?1642368756 rel=stylesheet>
+<link href=/css/featherlight.min.css?1642368756 rel=stylesheet>
+<link href=/css/perfect-scrollbar.min.css?1642368756 rel=stylesheet>
+<link href=/css/auto-complete.css?1642368756 rel=stylesheet>
+<link href=/css/atom-one-dark-reasonable.css?1642368756 rel=stylesheet>
+<link href=/css/theme.css?1642368756 rel=stylesheet>
+<link href=/css/tabs.css?1642368756 rel=stylesheet>
+<link href=/css/hugo-theme.css?1642368756 rel=stylesheet>
+<script src=/js/jquery-3.3.1.min.js?1642368756></script>
 <style>:root #header+#content>#left>#rlblock_left{display:none!important}</style>
 </head>
 <body data-url=/blog/announcing-meraki-operator/>
@@ -32,10 +32,10 @@ Network Operators
 <input data-search-input id=search-by type=search placeholder=Search...>
 <span data-search-clear><i class="fas fa-times"></i></span>
 </div>
-<script type=text/javascript src=/js/lunr.min.js?1642368651></script>
-<script type=text/javascript src=/js/auto-complete.js?1642368651></script>
+<script type=text/javascript src=/js/lunr.min.js?1642368756></script>
+<script type=text/javascript src=/js/auto-complete.js?1642368756></script>
 <script type=text/javascript>var baseurl="http://network-operator.io/"</script>
-<script type=text/javascript src=/js/search.js?1642368651></script>
+<script type=text/javascript src=/js/search.js?1642368756></script>
 </div>
 <section id=homelinks>
 <ul>
@@ -85,40 +85,7 @@ Announcing the Meraki Operator
 <div class=wrapper>
 <nav id=TableOfContents>
 <ul>
-<li><a href=#remote-disabled>apiVersion: meraki.network-operator.io/v1alpha1
-kind: Network
-metadata:
-name: yyz-corporate
-spec:
-organization: Example Organization
-name: YYZ Corporate
-statusPage:
-local: enabled
-remote: disabled</a></li>
-<li><a href=#width-20>apiVersion: meraki.network-operator.io/v1alpha1
-kind: RFProfile
-metadata:
-name: YYZ Default RF Profile
-spec:
-organization: Example Organization
-network: YYZ Corporate
-band:
-selectionType: ap
-steering: true
-clientBalancing: true
-fiveGhz:
-channel:
-width: 20</a></li>
-<li><a href=#psk-examplepsk123>apiVersion: meraki.network-operator.io/v1alpha1
-kind: SSID
-metadata:
-name: YYZ Corporate Employee SSID
-spec:
-organization: Example Organization
-network: YYZ Corporate
-authentication:
-mode: psk
-psk: ExamplePSK123</a></li>
+<li><a href=#integrating-opa-gatekeeper>Integrating OPA Gatekeeper</a></li>
 </ul>
 </nav>
 </div>
@@ -188,125 +155,118 @@ the following:</p>
 <li>Adopt an Access Point and select an RF Profile</li>
 <li>Define the upgrade strategy for APs to minimize client impact</li>
 </ul>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>
-</code></pre></div><hr>
-<h2 id=remote-disabled>apiVersion: meraki.network-operator.io/v1alpha1
-kind: Network
-metadata:
-name: yyz-corporate
-spec:
-organization: Example Organization
-name: YYZ Corporate
-statusPage:
-local: enabled
-remote: disabled</h2>
-<h2 id=width-20>apiVersion: meraki.network-operator.io/v1alpha1
-kind: RFProfile
-metadata:
-name: YYZ Default RF Profile
-spec:
-organization: Example Organization
-network: YYZ Corporate
-band:
-selectionType: ap
-steering: true
-clientBalancing: true
-fiveGhz:
-channel:
-width: 20</h2>
-<h2 id=psk-examplepsk123>apiVersion: meraki.network-operator.io/v1alpha1
-kind: SSID
-metadata:
-name: YYZ Corporate Employee SSID
-spec:
-organization: Example Organization
-network: YYZ Corporate
-authentication:
-mode: psk
-psk: ExamplePSK123</h2>
-<p>apiVersion: meraki.network-operator.io/v1alpha1
-kind: AccessPoint
-metadata:
-name: ap1-yyz
-spec:
-organization: Example Organization
-network: YYZ Corporate
-physicalAddress: |
-123 Example St
-Columbia, SC
-USA
-radios:
-24ghz:
-channel: 6
-rfProfile: YYZ Default RF Profile
-serialNumber: ABCD-1234-WXYZ
-tags:</p>
-<ul>
-<li>yyz</li>
-<li>corp</li>
-</ul>
-<hr>
-<p>apiVersion: meraki.network-operator.io/v1alpha1
-kind: GlobalWirelessSettings
-metadata:
-name: yyz-corporate-wifi-settings
-spec:
-upgradeSetting: minimizeClientDowntime</p>
-<pre tabindex=0><code>
-On its own, this can be accomplished with Ansible (and, in fact, the
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>---
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>meraki.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Network</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>yyz-corporate</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>organization</span>: <span style=color:#ae81ff>Example Organization</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>YYZ Corporate</span>
+  <span style=color:#f92672>statusPage</span>:
+    <span style=color:#f92672>local</span>: <span style=color:#ae81ff>enabled</span>
+    <span style=color:#f92672>remote</span>: <span style=color:#ae81ff>disabled</span>
+---
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>meraki.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>RFProfile</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>YYZ Default RF Profile</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>organization</span>: <span style=color:#ae81ff>Example Organization</span>
+  <span style=color:#f92672>network</span>: <span style=color:#ae81ff>YYZ Corporate</span>
+  <span style=color:#f92672>band</span>:
+    <span style=color:#f92672>selectionType</span>: <span style=color:#ae81ff>ap</span>
+    <span style=color:#f92672>steering</span>: <span style=color:#66d9ef>true</span>
+  <span style=color:#f92672>clientBalancing</span>: <span style=color:#66d9ef>true</span>
+  <span style=color:#f92672>fiveGhz</span>:
+    <span style=color:#f92672>channel</span>:
+      <span style=color:#f92672>width</span>: <span style=color:#ae81ff>20</span>
+---
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>meraki.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>SSID</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>YYZ Corporate Employee SSID</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>organization</span>: <span style=color:#ae81ff>Example Organization</span>
+  <span style=color:#f92672>network</span>: <span style=color:#ae81ff>YYZ Corporate</span>
+  <span style=color:#f92672>authentication</span>:
+    <span style=color:#f92672>mode</span>: <span style=color:#ae81ff>psk</span>
+    <span style=color:#f92672>psk</span>: <span style=color:#ae81ff>ExamplePSK123</span>
+---
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>meraki.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>AccessPoint</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>ap1-yyz</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>organization</span>: <span style=color:#ae81ff>Example Organization</span>
+  <span style=color:#f92672>network</span>: <span style=color:#ae81ff>YYZ Corporate</span>
+  <span style=color:#f92672>physicalAddress</span>: |<span style=color:#e6db74>
+</span><span style=color:#e6db74>    123 Example St
+</span><span style=color:#e6db74>    Columbia, SC
+</span><span style=color:#e6db74>    USA</span>    
+  <span style=color:#f92672>radios</span>:
+    <span style=color:#f92672>24ghz</span>:
+      <span style=color:#f92672>channel</span>: <span style=color:#ae81ff>6</span>
+  <span style=color:#f92672>rfProfile</span>:  <span style=color:#ae81ff>YYZ Default RF Profile</span>
+  <span style=color:#f92672>serialNumber</span>: <span style=color:#ae81ff>ABCD-1234-WXYZ</span>
+  <span style=color:#f92672>tags</span>:
+  - <span style=color:#ae81ff>yyz</span>
+  - <span style=color:#ae81ff>corp</span>
+---
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>meraki.network-operator.io/v1alpha1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>GlobalWirelessSettings</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>yyz-corporate-wifi-settings</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>upgradeSetting</span>: <span style=color:#ae81ff>minimizeClientDowntime</span>
+</code></pre></div><p>On its own, this can be accomplished with Ansible (and, in fact, the
 PoV uses Ansible to do all of this!) or with a custom Python or Go
-project -- really, anything that leverages the Meraki API could do
-everything that the Meraki Operator does.  However, the value comes
-from leveraging the Kubernetes ecosystem.  The primary driver for
-this project was to:
-
-* Provide an API frontend on which a company may already be standardized
-* Provide an API frontent on which traditional developers could manage their networks
-* Reduce the need to create custom frameworks, libraries, codebases, Ansible roles/playbooks, etc.
-* Remove the need for managing authentication, authorization, auditing/logging, role-based access control, etc.
-
-The above items are handled by leveraging native Kubernetes features
-and the Operator pattern.  However, being able to leverage the wider
-Kubernetes ecosystem is another massive advantage.
-
-## Integrating OPA Gatekeeper
-
-Compliance is a huge advantage of the Kubernetes ecosystem.  While some
+project &ndash; really, anything that leverages the Meraki API could do
+everything that the Meraki Operator does. However, the value comes
+from leveraging the Kubernetes ecosystem. The primary driver for
+this project was to:</p>
+<ul>
+<li>Provide an API frontend on which a company may already be standardized</li>
+<li>Provide an API frontent on which traditional developers could manage their networks</li>
+<li>Reduce the need to create custom frameworks, libraries, codebases, Ansible roles/playbooks, etc.</li>
+<li>Remove the need for managing authentication, authorization, auditing/logging, role-based access control, etc.</li>
+</ul>
+<p>The above items are handled by leveraging native Kubernetes features
+and the Operator pattern. However, being able to leverage the wider
+Kubernetes ecosystem is another massive advantage.</p>
+<h2 id=integrating-opa-gatekeeper>Integrating OPA Gatekeeper</h2>
+<p>Compliance is a huge advantage of the Kubernetes ecosystem. While some
 things are provided by Kubernetes itself (as mentioned above), some more
-complex requirements are not.  For example, consider the following
-requirements for your wireless network:
-
-* You must not use DFS channels
-* The only SSID that can use &quot;Open&quot; authentication must be named `Guest WiFi`
-* Your RADIUS servers must be from a list of servers
-
-The first is an example of a local regulatory requirement; the second is
+complex requirements are not. For example, consider the following
+requirements for your wireless network:</p>
+<ul>
+<li>You must not use DFS channels</li>
+<li>The only SSID that can use &ldquo;Open&rdquo; authentication must be named <code>Guest WiFi</code></li>
+<li>Your RADIUS servers must be from a list of servers</li>
+</ul>
+<p>The first is an example of a local regulatory requirement; the second is
 an example of a mandate from your Security team; the third is an
-internal engineering standards requirement.  All of these can be
-enforced via manual efforts and audits, peer review, etc.  However, when
+internal engineering standards requirement. All of these can be
+enforced via manual efforts and audits, peer review, etc. However, when
 leveraging the Meraki Operator with OPA Gatekeeper, these sorts of
 requirements can be enforced separate from your codebase, without
 requiring peer review, and with confidence that the state of your WiFi
 network is complying with regulatory, security, and architectural
-requirements!  Additionally, areas where peer review might miss a
+requirements! Additionally, areas where peer review might miss a
 violation (such as a typo in an IP address for a RADIUS server, such as
-writing `192.168.31.150` instead of `192.168.13.150`) are now enforced
-by code for free!  This provides benefits to the persona writing the
+writing <code>192.168.31.150</code> instead of <code>192.168.13.150</code>) are now enforced
+by code for free! This provides benefits to the persona writing the
 change, the persona reviewing the change, and the person who initially
-defined the standard!
-
-To show an example of this, we'll examine the most simple of the above
-three examples: `The only SSID that can use &quot;Open&quot; authentication must be named &quot;Guest WiFi&quot;`.
+defined the standard!</p>
+<p>To show an example of this, we&rsquo;ll examine the most simple of the above
+three examples: <code>The only SSID that can use "Open" authentication must be named "Guest WiFi"</code>.
 Normally, we would need peer review and audits to validate this.
 However, if we leverage OPA Gatekeeper to enforce this, we can be
 confident that our standards are enforced without requiring additional
-cognitive workload.
-
-First, install OPA Gatekeeper:
-
-```bash
-$ kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/release-3.7/deploy/gatekeeper.yaml
-</code></pre><p>Once this is done, wait a few minutes for images to pull and pods to
+cognitive workload.</p>
+<p>First, install OPA Gatekeeper:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$ kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/release-3.7/deploy/gatekeeper.yaml
+</code></pre></div><p>Once this is done, wait a few minutes for images to pull and pods to
 start. Next, create the <code>ConstraintTemplate</code>. This will create a
 parameterized <code>Constraint</code> Custom Resource Definition that we&rsquo;ll use to
 define the name of the SSID that is valid.</p>
@@ -444,17 +404,17 @@ Operator pattern.</p>
 <div style=left:-1000px;overflow:scroll;position:absolute;top:-1000px;border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px>
 <div style=border:none;box-sizing:content-box;height:200px;margin:0;padding:0;width:200px></div>
 </div>
-<script src=/js/clipboard.min.js?1642368651></script>
-<script src=/js/perfect-scrollbar.min.js?1642368651></script>
-<script src=/js/perfect-scrollbar.jquery.min.js?1642368651></script>
-<script src=/js/jquery.sticky.js?1642368651></script>
-<script src=/js/featherlight.min.js?1642368651></script>
-<script src=/js/highlight.pack.js?1642368651></script>
+<script src=/js/clipboard.min.js?1642368756></script>
+<script src=/js/perfect-scrollbar.min.js?1642368756></script>
+<script src=/js/perfect-scrollbar.jquery.min.js?1642368756></script>
+<script src=/js/jquery.sticky.js?1642368756></script>
+<script src=/js/featherlight.min.js?1642368756></script>
+<script src=/js/highlight.pack.js?1642368756></script>
 <script>hljs.initHighlightingOnLoad()</script>
-<script src=/js/modernizr.custom-3.6.0.js?1642368651></script>
-<script src=/js/learn.js?1642368651></script>
-<script src=/js/hugo-learn.js?1642368651></script>
-<script src=/mermaid/mermaid.js?1642368651></script>
+<script src=/js/modernizr.custom-3.6.0.js?1642368756></script>
+<script src=/js/learn.js?1642368756></script>
+<script src=/js/hugo-learn.js?1642368756></script>
+<script src=/mermaid/mermaid.js?1642368756></script>
 <script>mermaid.initialize({startOnLoad:!0})</script>
 </body>
 </html>
